@@ -2,10 +2,6 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from tensorflow import keras
 import tensorflow as tf
-from tensorflow.python.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Input
-from tensorflow.python.keras.models import Sequential, load_model
-from tensorflow.python.keras.layers import Dense, LeakyReLU, Dropout, Activation
-# from tensorflow.python.keras.applications import Xception
 from PIL import Image
 from io import BytesIO
 # from IPython.display import display, clear_output
@@ -19,41 +15,8 @@ app = Flask(__name__)
 
 # db = SQLAlchemy(app)
 
-# def create_pre_trained_model():
-#     pre_trained_model = Xception(
-#         input_shape=(224, 224, 3),
-#         include_top=False,
-#         weights='imagenet',
-#         pooling="max"
-#     )
-
-#     pre_trained_model.trainable = False
-
-#     return pre_trained_model
-
-# pre_trained_model = create_pre_trained_model()
-
-# def create_final_model(pre_trained_model):
-#     inputs = Input(shape=(224, 224, 3))
-#     x = pre_trained_model(inputs)
-#     x = Dropout(0.3)(x)
-#     outputs = Dense(units=7, activation='softmax')(x)
-#     model = model(inputs=inputs, outputs=outputs)
-
-#     model.compile(optimizer="adam",
-#                   loss="categorical_crossentropy",
-#                   metrics=["accuracy"])
-
-#     return model
-
 model = tf.keras.models.load_model('models/model.h5')
 
-
-# Get class labels
-# TRAIN_DIR = 'TRAIN/'
-# class_labels = sorted(os.listdir(TRAIN_DIR))
-
-# Define average thresholds for each class
 average_thresholds = {
     "Batik Insang": 0.84,
     "Batik Cendrawasih": 0.78,

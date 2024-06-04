@@ -1,0 +1,48 @@
+
+@startuml
+entity "batik"{
+    *id : bigint <<generated>>
+    --
+    *code : text
+    *name : text
+    description : text
+    *active : boolean | default(true)
+    created_by : bigint <<FK>>
+    updated_by : bigint <<FK>>
+    created_at : timestampwtz
+    updated_at : timestampwtz
+}
+
+entity "batik_stores"{
+    *id : bigint <<generated>>
+    --
+    batik_id : bigint <<FK>>
+    store_id : bigint <<FK>>
+    *active : boolean | default(true)
+    created_by : bigint <<FK>>
+    updated_by : bigint <<FK>>
+    created_at : timestampwtz
+    updated_at : timestampwtz
+}
+
+entity "stores"{
+    *id : bigint <<generated>>
+    --
+    name : text
+    address : text
+    phone : text
+    instagram : text
+    tokopedia : text
+    tiktok : text
+    *active : boolean | default(true)
+    created_by : bigint <<FK>>
+    updated_by : bigint <<FK>>
+    created_at : timestampwtz
+    updated_at : timestampwtz
+    label (Dokumen surat BA basah)
+}
+
+stores ||--o{ batik_stores
+batik ||--o{ batik_stores
+
+@enduml
