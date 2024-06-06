@@ -7,6 +7,9 @@ from io import BytesIO
 # from IPython.display import display, clear_output
 import numpy as np
 import os
+from connection import session
+import json
+from models import Stores, BatikStores, Batik
 
 app = Flask(__name__)
 
@@ -15,7 +18,7 @@ app = Flask(__name__)
 
 # db = SQLAlchemy(app)
 
-model = tf.keras.models.load_model('models/model.h5')
+model = tf.keras.models.load_model('ml_models/model.h5')
 
 average_thresholds = {
     "Batik Insang": 0.84,
@@ -27,7 +30,8 @@ average_thresholds = {
     "Batik Tambal": 0.89
 }
 
-class_labels = ['Batik Cendrawasih', 'Batik Insang', 'Batik Kawung', 'Batik Megamendung', 'Batik Parang', 'Batik Poleng', 'Batik Tambal']
+# class_labels = ['Batik Cendrawasih', 'Batik Insang', 'Batik Kawung', 'Batik Megamendung', 'Batik Parang', 'Batik Poleng', 'Batik Tambal']
+class_labels = ['cendrawasih', 'insang', 'kawung', 'megamendung', 'parang', 'poleng', 'tambal']
 def predict_image(image):
     img = Image.open(BytesIO(image)).resize((224, 224))
     img_array = np.array(img) / 255.0
@@ -54,17 +58,45 @@ def predict():
     # Get highest probability index
     highest_probability_index = np.argmax(predicted_probabilities)
 
-    predicted_labels = class_labels[highest_probability_index]
+    batik_code = class_labels[highest_probability_index]
 
 
-    print(predicted_labels)
-    print(predicted_probabilities[highest_probability_index])
+    batik = session.query(Batik).filter_by(code=batik_code).first()
+
     
     return {
-        "predicted_labels": predicted_labels,
+        "success" : True,
         # "average_thresholds": average_thresholds
+        "batik_id": batik.id,
         "predicted_probabilities": predicted_probabilities[highest_probability_index].item()
     }
+
+@app.get('/batik/<int:id>')
+def get_batik(id):
+    batik = session.get(Batik, id)
+    return {
+        "success": True,
+        "data": batik.to_dict()
+    }, 200
+
+@app.get('/batik')
+def get_batiks():
+    batiks = session.query(Batik).all()
+    return {
+        "success": True,
+        "data": [batik.to_dict() for batik in batiks]
+    }, 200
+
+@app.get('/stores')
+def get_stores():
+    batik_id = request.args.get('batik_id')
+
+    stores = session.query(Stores).join(BatikStores).filter(BatikStores.batik_id == batik_id).all()
+
+    return {
+        "success": True,
+        "data": [store.to_dict() for store in stores]
+    }, 200
 
 if __name__ == '__main__':
     app.run(debug=True)
