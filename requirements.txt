@@ -3,5 +3,6 @@ Flask==3.0.3
 Flask-SQLAlchemy==2.4.1
 psycopg2==2.9.9
 SQLAlchemy==2.0.30
-tensoflow==2.15.0
+tensorflow==2.15.0
 python-dotenv==1.0.1
+numpy==1.26.2
