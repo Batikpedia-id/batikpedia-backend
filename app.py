@@ -66,8 +66,9 @@ def predict():
     return {
         "success" : True,
         # "average_thresholds": average_thresholds
-        "batik_id": batik.id,
-        "predicted_probabilities": predicted_probabilities[highest_probability_index].item()
+        "data": batik.to_dict(),
+        "predicted_probabilities": predicted_probabilities[highest_probability_index].item(),
+        "message": "Batik Ditemukan"
     }
 
 @app.get('/batik/<int:id>')
