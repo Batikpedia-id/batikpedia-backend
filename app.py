@@ -61,12 +61,14 @@ def predict():
 
 
     batik = session.query(Batik).filter_by(code=batik_code).first()
-
-    
+    stores = session.query(Stores).join(BatikStores).filter(BatikStores.batik_id == batik.id).all()
     return {
         "success" : True,
         # "average_thresholds": average_thresholds
-        "data": batik.to_dict(),
+        "data": {
+            "batik": batik.to_dict(),
+            "stores": [store.to_dict() for store in stores]
+        },
         "predicted_probabilities": predicted_probabilities[highest_probability_index].item(),
         "message": "Batik Ditemukan"
     }
