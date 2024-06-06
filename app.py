@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from flask_sqlalchemy import SQLAlchemy
 from tensorflow import keras
 import tensorflow as tf
 from PIL import Image
