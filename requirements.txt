@@ -9,3 +9,4 @@ numpy==1.26.2
 Pillow==10.1.0
 google-cloud-storage
 google-auth
+Flask-JWT-Extended
