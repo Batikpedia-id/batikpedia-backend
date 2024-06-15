@@ -238,9 +238,9 @@ def action_delete_stores(id):
 
 @app.route('/login/oauth', methods=['POST'])
 def loginOauth():
-    request = requests.Request()
+    requestOauth = requests.Request()
     token = request.json['token']
-    id_info = id_token.verify_oauth2_token(token, request, os.getenv('GOOGLE_CLIENT_ID'))
+    id_info = id_token.verify_oauth2_token(token, requestOauth, os.getenv('GOOGLE_CLIENT_ID'))
 
     if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
         return ({"success": False, "message": "Invalid Token"}, 422)
