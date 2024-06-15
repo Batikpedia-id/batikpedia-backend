@@ -238,28 +238,31 @@ def action_delete_stores(id):
 
 @app.route('/login/oauth', methods=['POST'])
 def loginOauth():
-    requestOauth = requests.Request()
-    token = request.json['token']
-    id_info = id_token.verify_oauth2_token(token, requestOauth, os.getenv('GOOGLE_CLIENT_ID'))
+    try:
+        requestOauth = requests.Request()
+        token = request.json['token']
+        id_info = id_token.verify_oauth2_token(token, requestOauth, os.getenv('GOOGLE_CLIENT_ID'))
 
-    if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            return ({"success": False, "message": "Invalid Token"}, 422)
+        
+        email = id_info['email']
+        
+        user = session.query(Users).filter_by(username=email).first()
+
+        if not user:
+            # create user
+            user = Users(username=email, password="")
+            session.add(user)
+            session.commit()
+
+        access_token = create_access_token(identity=1)
+
+
+        return ({"success": True, "access_token": access_token}, 200)
+
+    except Exception as e:
         return ({"success": False, "message": "Invalid Token"}, 422)
-    
-    email = id_info['email']
-    
-    user = session.query(Users).filter_by(username=email).first()
-
-    if not user:
-        # create user
-        user = Users(username=email, password="")
-        session.add(user)
-        session.commit()
-
-    access_token = create_access_token(identity=1)
-
-
-    return ({"success": True, "access_token": access_token}, 200)
-
 
 @app.post('/predict')
 # @check_user
