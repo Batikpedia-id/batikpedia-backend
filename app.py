@@ -8,12 +8,30 @@ import numpy as np
 import os
 from connection import session
 import json
-from models import Stores, BatikStores, Batik
+from models import Stores, BatikStores, Batik, Users
 from storage import upload_blob, delete_blob
 from werkzeug.utils import secure_filename
 from sqlalchemy.dialects.postgresql import insert
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from middleware import check_user
+
+
+
+import os
+from dotenv import load_dotenv
+# read from db from environment variable
+
+load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
+
+jwt = JWTManager(app)
+
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -217,7 +235,34 @@ def action_delete_stores(id):
 
     return redirect('/admin/store')
 
+
+@app.route('/login/oauth', methods=['POST'])
+def loginOauth():
+    request = requests.Request()
+    token = request.json['token']
+    id_info = id_token.verify_oauth2_token(token, request, os.getenv('GOOGLE_CLIENT_ID'))
+
+    if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        return ({"success": False, "message": "Invalid Token"}, 422)
+    
+    email = id_info['email']
+    
+    user = session.query(Users).filter_by(username=email).first()
+
+    if not user:
+        # create user
+        user = Users(username=email, password="")
+        session.add(user)
+        session.commit()
+
+    access_token = create_access_token(identity=1)
+
+
+    return ({"success": True, "access_token": access_token}, 200)
+
+
 @app.post('/predict')
+# @check_user
 def predict():
     try:
         image = request.files['image'].read()

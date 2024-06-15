@@ -71,4 +71,21 @@ class Stores(Base):
             "tiktok": self.tiktok
         }
 
+class Users(Base):
+    __tablename__ = 'users'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String)
+    password: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "password": self.password,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
     
