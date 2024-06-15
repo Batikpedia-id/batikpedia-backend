@@ -2,6 +2,7 @@ from typing import List
 from typing import Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
+from sqlalchemy import Float
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -18,6 +19,9 @@ class Batik(Base):
     name: Mapped[str] = mapped_column(String)
     code: Mapped[str] = mapped_column(String)
     image: Mapped[str] = mapped_column(String)
+    image_name: Mapped[str] = mapped_column(String)
+    # numeric
+    treshold: Mapped[float] = mapped_column(Float)
     description: Mapped[str] = mapped_column(String)
     batik_stores = relationship("BatikStores", back_populates="batik")
 

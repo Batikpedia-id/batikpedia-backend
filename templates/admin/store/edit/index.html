@@ -1,0 +1,261 @@
+{% extends 'components/admin_layout/index.html' %} {% block content %}
+<div class="p-4 sm:ml-64">
+    <div class="p-4 bg-white rounded-lg mt-14">
+        <div class="inline-flex items-center rounded-md shadow-sm" role="group">
+            <button
+                type="button"
+                class="inline-flex px-2 py-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+            >
+                <a href="/" class="inline-flex items-center">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="icon icon-tabler icon-tabler-chevron-left"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M15 6l-6 6l6 6" />
+                    </svg>
+                    <span class="ms-2">Tambah Toko</span>
+                </a>
+            </button>
+        </div>
+        <form
+            action="/admin/store/edit/{{ data.id }}"
+            method="POST"
+            enctype="multipart/form-data"
+            class="relative grid gap-6 overflow-x-auto"
+        >
+            <div class="relative grid gap-6 overflow-x-auto px-5">
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Nama Toko<span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="name"
+                        value="{{ data.name }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Nama Batik"
+                        required
+                    />
+                </div>
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Batik Dijual<span class="text-red-500">*</span>
+                    </label>
+                    <button
+                        id="dropdownSearchButton"
+                        data-dropdown-toggle="dropdownSearch"
+                        class="inline-flex items-center px-4 py-2 gap-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="button"
+                    >
+                        Pilih Motif Batik
+                        <svg
+                            class="w-2.5 h-2.5 ms-2.5"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 10 6"
+                        >
+                            <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="m1 1 4 4 4-4"
+                            />
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown menu -->
+                    <div
+                        id="dropdownSearch"
+                        class="z-10 hidden bg-white rounded-lg shadow w-60 dark:bg-gray-700"
+                    >
+                        <ul
+                            class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropdownSearchButton"
+                        >
+                            {% for batik in batik_data %}
+                            <li>
+                                <div
+                                    class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                >
+                                    <input id="checkbox-item-{{ batik.id }}"
+                                    name="batik[]" type="checkbox" value="{{
+                                    batik.id }}" class="w-4 h-4 text-blue-600
+                                    bg-gray-100 border-gray-300 rounded
+                                    focus:ring-blue-500 dark:focus:ring-blue-600
+                                    dark:ring-offset-gray-700
+                                    dark:focus:ring-offset-gray-700 focus:ring-2
+                                    dark:bg-gray-600 dark:border-gray-500" {%
+                                    for batik_store in data.batik_stores %} {%
+                                    if batik_store and batik_store.batik_id ==
+                                    batik.id %} checked {% endif %} {% endfor %}
+                                    />
+                                    <label
+                                        for="checkbox-item-{{ batik.id }}"
+                                        class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                                    >
+                                        {{ batik.name }}
+                                    </label>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Alamat<span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="address"
+                        value="{{ data.address }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Kode Batik"
+                        required
+                    />
+                </div>
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        No Telepon<span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="phone"
+                        value="{{ data.phone }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Kode Batik"
+                        required
+                    />
+                </div>
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Instagram<span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="instagram"
+                        value="{{ data.instagram }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Kode Batik"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Tokopedia<span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="tokopedia"
+                        value="{{ data.tokopedia }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Link Tokopedia"
+                    />
+                </div>
+                <div>
+                    <label
+                        for="title"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Alamat<span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="tiktok"
+                        value="{{ data.tiktok }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Kode Batik"
+                    />
+                </div>
+                <div>
+                    <button
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    >
+                        Simpan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    const fileInput = document.getElementById("dropzone-file");
+    const imagePreview = document.getElementById("image-preview");
+
+    // Tambahkan event listener untuk perubahan pada input file
+    fileInput.addEventListener("change", function () {
+        // Pastikan ada file yang dipilih
+        if (fileInput.files && fileInput.files[0]) {
+            // hidden default image
+            document.getElementById("default-image").style.display = "none";
+            document.getElementById("image-preview").style.display = "block";
+            // Buat objek FileReader untuk membaca file
+            const reader = new FileReader();
+
+            // Atur fungsi callback saat file telah dibaca
+            reader.onload = function (e) {
+                // Atur sumber gambar pratinjau ke URL data
+                imagePreview.src = e.target.result;
+                // Tampilkan gambar pratinjau
+                imagePreview.style.display = "block";
+            };
+
+            // Baca file sebagai URL data
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    });
+
+    // create slug
+    const title = document.getElementsByName("title")[0];
+    const slug = document.getElementsByName("slug")[0];
+
+    // event listener
+    title.addEventListener("input", function () {
+        slug.value = title.value
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\w-]+/g, "");
+    });
+</script>
+
+{% endblock %}

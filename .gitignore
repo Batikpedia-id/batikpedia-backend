@@ -5,3 +5,5 @@ __pycache__/
 .idea/
 *.sqlite
 *alembic.ini
+*batikpedia-sa.json
+*node_modules/

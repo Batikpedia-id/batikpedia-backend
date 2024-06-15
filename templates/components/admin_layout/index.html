@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="{{url_for('static',filename='dist/css/output.css')}}"
+        />
+        {#
+        <script
+            src="{{url_for('static',filename='dist/js/app.js')}}"
+            type="module"
+        ></script>
+        #}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+        <title>Admin Batikpedia</title>
+    </head>
+
+    <body class="bg-gray-100 font-[Poppins]">
+        {% include 'components/sidebar/index.html' %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
