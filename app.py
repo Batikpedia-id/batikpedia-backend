@@ -29,6 +29,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
+client_id = os.getenv('GOOGLE_CLIENT_ID')
 
 jwt = JWTManager(app)
 
@@ -241,27 +242,34 @@ def loginOauth():
     try:
         requestOauth = requests.Request()
         token = request.json['token']
-        id_info = id_token.verify_oauth2_token(token, requestOauth, os.getenv('GOOGLE_CLIENT_ID'))
+
+        # print(token)
+        print(client_id)
+        id_info = id_token.verify_oauth2_token(token, requestOauth,client_id )
 
         if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            return ({"success": False, "message": "Invalid Token"}, 422)
+            return ({"success": False, "message": "Gagal"}, 422)
         
         email = id_info['email']
+
+        print(email)
+        print(id_info)
         
         user = session.query(Users).filter_by(username=email).first()
 
         if not user:
-            # create user
-            user = Users(username=email, password="")
+        #     # create user
+            user = Users(username=email, password="x")
             session.add(user)
             session.commit()
 
-        access_token = create_access_token(identity=1)
+        access_token = create_access_token(identity=user.id)
 
 
         return ({"success": True, "access_token": access_token}, 200)
 
     except Exception as e:
+        print(e)
         return ({"success": False, "message": "Invalid Token"}, 422)
 
 @app.post('/predict')
